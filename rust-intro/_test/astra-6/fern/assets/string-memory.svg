@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="300" viewBox="0 0 760 300" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="14">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect width="760" height="300" fill="#ffffff"/>
+
+  <!-- Section labels -->
+  <text x="40" y="30" font-weight="600" fill="#0f172a">Stack</text>
+  <text x="430" y="30" font-weight="600" fill="#0f172a">Heap</text>
+  <line x1="340" y1="40" x2="340" y2="280" stroke="#cbd5e1" stroke-dasharray="4 4"/>
+
+  <!-- String handle -->
+  <text x="40" y="64" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" fill="#1e3a8a">let s = String::from("hello");</text>
+  <rect x="40" y="74" width="260" height="90" rx="6" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="52" y="94" font-family="ui-monospace, Menlo, Consolas, monospace" fill="#1e3a8a">s: String   (24 bytes)</text>
+  <g font-family="ui-monospace, Menlo, Consolas, monospace" fill="#0f172a">
+    <text x="52" y="118">ptr</text><text x="130" y="118" fill="#475569">0x5ac0…</text>
+    <text x="52" y="136">cap</text><text x="130" y="136" fill="#475569">8</text>
+    <text x="52" y="154">len</text><text x="130" y="154" fill="#475569">5</text>
+  </g>
+  <path d="M230,114 C 330,114 360,100 428,100" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Heap buffer -->
+  <g font-family="ui-monospace, Menlo, Consolas, monospace" text-anchor="middle">
+    <g>
+      <rect x="430" y="80" width="36" height="40" fill="#dbeafe" stroke="#3b82f6"/><text x="448" y="106" fill="#0f172a">h</text>
+      <rect x="466" y="80" width="36" height="40" fill="#dbeafe" stroke="#3b82f6"/><text x="484" y="106" fill="#0f172a">e</text>
+      <rect x="502" y="80" width="36" height="40" fill="#dbeafe" stroke="#3b82f6"/><text x="520" y="106" fill="#0f172a">l</text>
+      <rect x="538" y="80" width="36" height="40" fill="#dbeafe" stroke="#3b82f6"/><text x="556" y="106" fill="#0f172a">l</text>
+      <rect x="574" y="80" width="36" height="40" fill="#dbeafe" stroke="#3b82f6"/><text x="592" y="106" fill="#0f172a">o</text>
+      <rect x="610" y="80" width="36" height="40" fill="#f8fafc" stroke="#94a3b8" stroke-dasharray="3 3"/>
+      <rect x="646" y="80" width="36" height="40" fill="#f8fafc" stroke="#94a3b8" stroke-dasharray="3 3"/>
+      <rect x="682" y="80" width="36" height="40" fill="#f8fafc" stroke="#94a3b8" stroke-dasharray="3 3"/>
+    </g>
+    <g font-size="11" fill="#64748b">
+      <text x="448" y="72">0</text><text x="484" y="72">1</text><text x="520" y="72">2</text><text x="556" y="72">3</text><text x="592" y="72">4</text><text x="628" y="72">5</text><text x="664" y="72">6</text><text x="700" y="72">7</text>
+    </g>
+  </g>
+  <path d="M430,130 L610,130" stroke="#3b82f6" stroke-width="2"/>
+  <text x="520" y="146" text-anchor="middle" font-size="12" fill="#1e40af">len = 5 (used)</text>
+  <path d="M430,158 L718,158" stroke="#94a3b8" stroke-width="2"/>
+  <text x="574" y="174" text-anchor="middle" font-size="12" fill="#475569">cap = 8 (allocated; no NUL terminator, UTF-8 bytes)</text>
+
+  <!-- &str slice -->
+  <text x="40" y="208" font-family="ui-monospace, Menlo, Consolas, monospace" fill="#92400e">let w: &amp;str = &amp;s[1..4];</text>
+  <rect x="40" y="218" width="260" height="72" rx="6" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="52" y="238" font-family="ui-monospace, Menlo, Consolas, monospace" fill="#92400e">w: &amp;str   (16 bytes, borrows s)</text>
+  <g font-family="ui-monospace, Menlo, Consolas, monospace" fill="#0f172a">
+    <text x="52" y="260">ptr</text><text x="130" y="260" fill="#475569">0x5ac1…</text>
+    <text x="52" y="280">len</text><text x="130" y="280" fill="#475569">3</text>
+  </g>
+  <path d="M230,254 C 330,254 400,200 484,124" fill="none" stroke="#b45309" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arrow)"/>
+  <rect x="466" y="80" width="108" height="40" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+  <text x="520" y="200" text-anchor="middle" font-size="12" fill="#92400e">"ell" — a view, nothing copied</text>
+</svg>

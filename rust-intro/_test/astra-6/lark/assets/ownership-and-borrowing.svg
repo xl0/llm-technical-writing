@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="580" viewBox="0 0 960 580" role="img" aria-labelledby="title desc">
+  <title id="title">Rust ownership, moves, and borrowing</title>
+  <desc id="desc">A String moves from one owner to another, invalidating the first name. Below, a value may have either many shared borrows or one exclusive mutable borrow.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/></marker>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#2563eb"/></marker>
+    <marker id="arrowAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#d97706"/></marker>
+  </defs>
+  <rect width="960" height="580" rx="18" fill="#f8fafc"/>
+  <text x="36" y="42" font-family="Inter, system-ui, sans-serif" font-size="25" font-weight="700" fill="#172033">Ownership: exactly one owner, deterministic destruction</text>
+
+  <!-- Heap buffer -->
+  <rect x="610" y="86" width="300" height="78" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="632" y="114" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" fill="#475569">heap allocation</text>
+  <text x="632" y="145" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="24" fill="#1e3a8a">h e l l o</text>
+
+  <!-- s1 -->
+  <rect x="52" y="82" width="230" height="88" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="72" y="110" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="19" font-weight="700" fill="#64748b">s1: String</text>
+  <text x="72" y="139" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15" fill="#64748b">ptr · len 5 · cap 5</text>
+  <line x1="78" y1="102" x2="262" y2="158" stroke="#dc2626" stroke-width="2.5"/>
+  <line x1="262" y1="102" x2="78" y2="158" stroke="#dc2626" stroke-width="2.5"/>
+  <text x="52" y="194" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#dc2626">moved: using s1 is a compile error</text>
+
+  <!-- move arrow -->
+  <line x1="292" y1="126" x2="348" y2="126" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="321" y="72" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" fill="#334155">let s2 = s1;</text>
+
+  <!-- s2 -->
+  <rect x="360" y="82" width="230" height="88" rx="10" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+  <text x="380" y="110" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="19" font-weight="700" fill="#172033">s2: String</text>
+  <text x="380" y="139" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15" fill="#475569">ptr · len 5 · cap 5</text>
+  <line x1="592" y1="112" x2="606" y2="112" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowBlue)"/>
+  <text x="758" y="72" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#2563eb">same allocation — no copy, no double-free</text>
+  <text x="360" y="194" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#475569">when s2 leaves scope: drop(s2) frees it, once</text>
+
+  <rect x="52" y="222" width="858" height="48" rx="9" fill="#ecfdf5" stroke="#99f6e4"/>
+  <text x="72" y="252" font-family="Inter, system-ui, sans-serif" font-size="16" fill="#115e59">C analogy: malloc/free, but the owner and the free are inferred from scope — for every heap type, not by convention.</text>
+
+  <line x1="36" y1="296" x2="924" y2="296" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="36" y="334" font-family="Inter, system-ui, sans-serif" font-size="25" font-weight="700" fill="#172033">Borrowing: temporary access without taking ownership</text>
+
+  <!-- center value -->
+  <rect x="390" y="382" width="180" height="74" rx="12" fill="#172033"/>
+  <text x="480" y="414" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="19" font-weight="700" fill="#ffffff">v: Vec&lt;i32&gt;</text>
+  <text x="480" y="439" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" fill="#cbd5e1">the owner</text>
+
+  <!-- shared -->
+  <rect x="52" y="356" width="248" height="126" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="72" y="386" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="17" font-weight="700" fill="#1d4ed8">many  &amp;v</text>
+  <text x="72" y="416" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#334155">shared / read-only borrows</text>
+  <text x="72" y="442" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#334155">may coexist freely</text>
+  <text x="72" y="466" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" fill="#475569">let a = &amp;v;  let b = &amp;v;</text>
+  <path d="M 300 404 C 340 404, 350 410, 386 414" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowBlue)"/>
+  <path d="M 300 442 C 340 442, 350 432, 386 428" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <!-- XOR -->
+  <circle cx="480" cy="510" r="25" fill="#ffffff" stroke="#d97706" stroke-width="2"/>
+  <text x="480" y="518" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="800" fill="#b45309">XOR</text>
+
+  <!-- mutable -->
+  <rect x="660" y="356" width="248" height="126" rx="12" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+  <text x="680" y="386" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="17" font-weight="700" fill="#b45309">one  &amp;mut v</text>
+  <text x="680" y="416" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#334155">exclusive / read-write borrow</text>
+  <text x="680" y="442" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#334155">no other borrow may be live</text>
+  <text x="680" y="466" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" fill="#475569">let m = &amp;mut v;</text>
+  <path d="M 660 414 C 625 414, 615 410, 574 414" fill="none" stroke="#d97706" stroke-width="2" marker-end="url(#arrowAmber)"/>
+
+  <text x="480" y="562" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="600" fill="#334155">Aliasing XOR mutation — checked at compile time, so references cannot dangle or race.</text>
+</svg>

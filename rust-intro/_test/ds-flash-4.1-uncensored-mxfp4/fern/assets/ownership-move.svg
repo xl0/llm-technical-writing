@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="270" viewBox="0 0 760 270" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="14">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrowBig" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#0f172a"/>
+    </marker>
+  </defs>
+  <rect width="760" height="270" fill="#ffffff"/>
+
+  <!-- Left: before -->
+  <text x="30" y="30" font-weight="600" fill="#0f172a">Before</text>
+  <text x="30" y="52" font-family="ui-monospace, Menlo, Consolas, monospace" fill="#1e3a8a">let s = String::from("hi");</text>
+
+  <rect x="30" y="70" width="150" height="78" rx="6" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="42" y="90" font-family="ui-monospace, Menlo, Consolas, monospace" fill="#1e3a8a">s</text>
+  <g font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#0f172a">
+    <text x="42" y="110">ptr  <tspan fill="#475569">0x5ac0</tspan></text>
+    <text x="42" y="126">cap  <tspan fill="#475569">2</tspan></text>
+    <text x="42" y="142">len  <tspan fill="#475569">2</tspan></text>
+  </g>
+  <path d="M120,106 C 170,106 180,190 230,190" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <g font-family="ui-monospace, Menlo, Consolas, monospace" text-anchor="middle">
+    <rect x="232" y="172" width="36" height="36" fill="#dbeafe" stroke="#3b82f6"/><text x="250" y="196" fill="#0f172a">h</text>
+    <rect x="268" y="172" width="36" height="36" fill="#dbeafe" stroke="#3b82f6"/><text x="286" y="196" fill="#0f172a">i</text>
+  </g>
+  <text x="268" y="228" text-anchor="middle" font-size="12" fill="#475569">heap</text>
+
+  <!-- Center arrow -->
+  <path d="M345,135 L 415,135" stroke="#0f172a" stroke-width="2.5" marker-end="url(#arrowBig)"/>
+  <text x="380" y="122" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#0f172a">let t = s;</text>
+  <text x="380" y="158" text-anchor="middle" font-size="11" fill="#64748b">24-byte memcpy,</text>
+  <text x="380" y="172" text-anchor="middle" font-size="11" fill="#64748b">no heap traffic</text>
+
+  <!-- Right: after -->
+  <text x="440" y="30" font-weight="600" fill="#0f172a">After</text>
+  <text x="440" y="52" font-family="ui-monospace, Menlo, Consolas, monospace" fill="#475569">// s is statically dead</text>
+
+  <rect x="440" y="70" width="150" height="78" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5 3"/>
+  <text x="452" y="90" font-family="ui-monospace, Menlo, Consolas, monospace" fill="#94a3b8" text-decoration="line-through">s</text>
+  <text x="452" y="116" font-size="12" fill="#b91c1c">moved out</text>
+  <text x="452" y="134" font-size="12" fill="#b91c1c">use → E0382</text>
+
+  <rect x="440" y="160" width="150" height="78" rx="6" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="452" y="180" font-family="ui-monospace, Menlo, Consolas, monospace" fill="#1e3a8a">t</text>
+  <g font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#0f172a">
+    <text x="452" y="200">ptr  <tspan fill="#475569">0x5ac0</tspan></text>
+    <text x="452" y="216">cap  <tspan fill="#475569">2</tspan></text>
+    <text x="452" y="232">len  <tspan fill="#475569">2</tspan></text>
+  </g>
+  <path d="M530,196 C 580,196 590,190 640,190" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <g font-family="ui-monospace, Menlo, Consolas, monospace" text-anchor="middle">
+    <rect x="642" y="172" width="36" height="36" fill="#dbeafe" stroke="#3b82f6"/><text x="660" y="196" fill="#0f172a">h</text>
+    <rect x="678" y="172" width="36" height="36" fill="#dbeafe" stroke="#3b82f6"/><text x="696" y="196" fill="#0f172a">i</text>
+  </g>
+  <text x="678" y="228" text-anchor="middle" font-size="12" fill="#475569">same heap bytes</text>
+  <text x="740" y="256" text-anchor="end" font-size="12" fill="#475569">freed exactly once, when t drops</text>
+</svg>

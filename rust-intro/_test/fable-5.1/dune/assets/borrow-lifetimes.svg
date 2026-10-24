@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 520" width="980" height="520" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <defs>
+    <marker id="arr-slate" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#475569"/>
+    </marker>
+    <marker id="arr-teal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#0d9488"/>
+    </marker>
+    <marker id="arr-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#d97706"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="980" height="520" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+
+  <!-- Header -->
+  <text x="28" y="36" font-size="18" font-weight="700" fill="#0f172a">The Borrow Checker: Aliasing XOR Mutability &amp; Non-Lexical Lifetimes (NLL)</text>
+  <text x="28" y="57" font-size="13" fill="#475569">Compile-time read-write lock: a value can have N shared readers (&amp;T) OR 1 exclusive writer (&amp;mut T), never both simultaneously.</text>
+
+  <!-- ================= LEFT PANEL: State Machine ================= -->
+  <rect x="24" y="76" width="420" height="420" rx="8" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="24" y="76" width="420" height="32" rx="8" fill="#e2e8f0"/>
+  <rect x="24" y="96" width="420" height="12" fill="#e2e8f0"/>
+  <text x="40" y="97" font-size="13" font-weight="700" fill="#1e293b">1. ACCESS STATE MACHINE (COMPILE-TIME RWLOCK)</text>
+
+  <!-- Owned State Box (Top Left) -->
+  <rect x="38" y="124" width="168" height="68" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+  <text x="122" y="146" font-size="13" font-weight="700" fill="#1e3a8a" text-anchor="middle">Unique Owner (T)</text>
+  <text x="122" y="164" font-size="11.5" fill="#1d4ed8" text-anchor="middle">Active borrows = 0</text>
+  <text x="122" y="180" font-size="10.5" fill="#475569" text-anchor="middle">Read, mutate, move, drop</text>
+
+  <!-- Moved / Dropped State (Top Right) -->
+  <rect x="284" y="124" width="146" height="68" rx="8" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="357" y="146" font-size="12.5" font-weight="700" fill="#334155" text-anchor="middle">Moved / Dropped</text>
+  <text x="357" y="164" font-size="11" fill="#475569" text-anchor="middle">Binding invalidated</text>
+  <text x="357" y="180" font-size="10.5" fill="#64748b" text-anchor="middle">Drop frees heap once</text>
+
+  <!-- Arrow Owned -> Moved/Dropped -->
+  <path d="M 206 158 L 278 158" fill="none" stroke="#475569" stroke-width="1.8" marker-end="url(#arr-slate)"/>
+  <text x="244" y="149" font-family="'JetBrains Mono', Consolas, monospace" font-size="10" font-weight="600" fill="#334155" text-anchor="middle">move/drop</text>
+
+  <!-- Shared Borrow State (&T) -->
+  <rect x="38" y="256" width="176" height="112" rx="8" fill="#f0fdfa" stroke="#0d9488" stroke-width="2"/>
+  <text x="126" y="279" font-size="13" font-weight="700" fill="#115e59" text-anchor="middle">Shared Borrow (&amp;T)</text>
+  <text x="126" y="297" font-family="'JetBrains Mono', Consolas, monospace" font-size="11" font-weight="600" fill="#0f766e" text-anchor="middle">Readers: 1..N | Writers: 0</text>
+  <text x="126" y="318" font-size="11" fill="#334155" text-anchor="middle">• &amp;T is Copy (cloneable ptr)</text>
+  <text x="126" y="336" font-size="11" fill="#334155" text-anchor="middle">• Owner frozen (read-only)</text>
+  <text x="126" y="354" font-size="11" fill="#334155" text-anchor="middle">• Cannot move or drop T</text>
+
+  <!-- Exclusive Borrow State (&mut T) -->
+  <rect x="254" y="256" width="176" height="112" rx="8" fill="#fffbeb" stroke="#d97706" stroke-width="2"/>
+  <text x="342" y="279" font-size="13" font-weight="700" fill="#92400e" text-anchor="middle">Exclusive (&amp;mut T)</text>
+  <text x="342" y="297" font-family="'JetBrains Mono', Consolas, monospace" font-size="11" font-weight="600" fill="#b45309" text-anchor="middle">Readers: 0 | Writers: 1</text>
+  <text x="342" y="318" font-size="11" fill="#334155" text-anchor="middle">• &amp;mut T is Move-only</text>
+  <text x="342" y="336" font-size="11" fill="#334155" text-anchor="middle">• Owner completely locked</text>
+  <text x="342" y="354" font-size="11" fill="#334155" text-anchor="middle">• C equivalent: T * restrict</text>
+
+  <!-- Owner <-> Shared -->
+  <path d="M 96 192 L 96 250" fill="none" stroke="#0d9488" stroke-width="2" marker-end="url(#arr-teal)"/>
+  <text x="88" y="226" font-family="'JetBrains Mono', Consolas, monospace" font-size="11.5" font-weight="700" fill="#0f766e" text-anchor="end">&amp;x</text>
+
+  <path d="M 134 256 L 134 198" fill="none" stroke="#475569" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-slate)"/>
+  <text x="142" y="226" font-size="10.5" fill="#475569">last use</text>
+
+  <!-- Owner <-> Exclusive -->
+  <path d="M 176 192 L 300 252" fill="none" stroke="#d97706" stroke-width="2" marker-end="url(#arr-amber)"/>
+  <text x="228" y="238" font-family="'JetBrains Mono', Consolas, monospace" font-size="11.5" font-weight="700" fill="#b45309" text-anchor="end">&amp;mut x</text>
+
+  <path d="M 336 256 L 204 192" fill="none" stroke="#475569" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-slate)"/>
+  <text x="292" y="218" font-size="10.5" fill="#475569">last use</text>
+
+  <!-- XOR conflict badge between Shared and Exclusive -->
+  <line x1="214" y1="312" x2="254" y2="312" stroke="#dc2626" stroke-width="2"/>
+  <rect x="219" y="301" width="30" height="22" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="234" y="316" font-size="10" font-weight="800" fill="#dc2626" text-anchor="middle">XOR</text>
+
+  <!-- Bottom summary box in left panel -->
+  <rect x="38" y="384" width="392" height="98" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="52" y="405" font-size="12" font-weight="700" fill="#0f172a">What this single invariant prevents at compile time:</text>
+  <text x="52" y="425" font-size="11.5" fill="#334155">1. <tspan font-weight="600">Use-after-free:</tspan> Owner cannot drop or move while borrowed.</text>
+  <text x="52" y="444" font-size="11.5" fill="#334155">2. <tspan font-weight="600">Data races:</tspan> Concurrent mutation + reading is unrepresentable.</text>
+  <text x="52" y="463" font-size="11.5" fill="#334155">3. <tspan font-weight="600">Pointer aliasing:</tspan> <tspan font-family="'JetBrains Mono', Consolas, monospace">&amp;mut T</tspan> emits LLVM <tspan font-family="'JetBrains Mono', Consolas, monospace">noalias</tspan> optimizations.</text>
+
+  <!-- ================= RIGHT PANEL: NLL Timeline ================= -->
+  <rect x="464" y="76" width="492" height="420" rx="8" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="464" y="76" width="492" height="32" rx="8" fill="#e2e8f0"/>
+  <rect x="464" y="96" width="492" height="12" fill="#e2e8f0"/>
+  <text x="480" y="97" font-size="13" font-weight="700" fill="#1e293b">2. NON-LEXICAL LIFETIMES (NLL): BORROWS END AT LAST USE</text>
+
+  <!-- Column headers -->
+  <text x="482" y="126" font-size="11.5" font-weight="700" fill="#64748b">CODE TIMELINE</text>
+  <text x="775" y="126" font-size="11.5" font-weight="700" fill="#2563eb" text-anchor="middle">buf</text>
+  <text x="835" y="126" font-size="11.5" font-weight="700" fill="#0d9488" text-anchor="middle">r1, r2 (&amp;)</text>
+  <text x="905" y="126" font-size="11.5" font-weight="700" fill="#d97706" text-anchor="middle">m (&amp;mut)</text>
+  <line x1="476" y1="133" x2="942" y2="133" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Code rows -->
+  <g font-family="'JetBrains Mono', Consolas, monospace" font-size="12">
+    <text x="482" y="156" fill="#0f172a"><tspan fill="#94a3b8">1</tspan> let mut buf = vec![10, 20];</text>
+    <text x="482" y="186" fill="#0f766e"><tspan fill="#94a3b8">2</tspan> let r1 = &amp;buf[0];</text>
+    <text x="482" y="216" fill="#0f766e"><tspan fill="#94a3b8">3</tspan> let r2 = &amp;buf[1];</text>
+    <text x="482" y="246" fill="#0f766e"><tspan fill="#94a3b8">4</tspan> println!("{r1}, {r2}");</text>
+    <text x="482" y="276" fill="#b45309"><tspan fill="#94a3b8">5</tspan> let m = &amp;mut buf;</text>
+    <text x="482" y="306" fill="#b45309"><tspan fill="#94a3b8">6</tspan> m.push(30);</text>
+    <text x="482" y="336" fill="#1e40af"><tspan fill="#94a3b8">7</tspan> println!("{buf:?}");</text>
+    <text x="482" y="364" fill="#64748b"><tspan fill="#94a3b8">8</tspan> } // buf dropped here</text>
+  </g>
+
+  <!-- Vertical Lifespan Bars -->
+  <!-- buf owner bar (lines 1..8) -->
+  <rect x="769" y="146" width="12" height="218" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <circle cx="775" cy="152" r="3" fill="#2563eb"/>
+  <circle cx="775" cy="358" r="3" fill="#2563eb"/>
+
+  <!-- r1 & r2 shared borrow bar (lines 2..4) -->
+  <rect x="822" y="176" width="26" height="74" rx="4" fill="#ccfbf1" stroke="#0d9488" stroke-width="2"/>
+  <text x="835" y="217" font-size="10" font-weight="700" fill="#115e59" text-anchor="middle">2x &amp;</text>
+  <line x1="814" y1="250" x2="856" y2="250" stroke="#0d9488" stroke-width="2"/>
+  <text x="860" y="253" font-size="10" font-weight="600" fill="#0f766e">ends!</text>
+
+  <!-- m mutable borrow bar (lines 5..6) -->
+  <rect x="892" y="266" width="26" height="44" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="905" y="292" font-size="10" font-weight="700" fill="#92400e" text-anchor="middle">1x</text>
+  <line x1="884" y1="310" x2="926" y2="310" stroke="#d97706" stroke-width="2"/>
+
+  <!-- Why it matters callout at bottom right -->
+  <rect x="480" y="384" width="460" height="98" rx="6" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="494" y="405" font-size="12" font-weight="700" fill="#991b1b">Why C/C++ iterator invalidation is impossible in safe Rust:</text>
+  <text x="494" y="424" font-size="11.5" fill="#7f1d1d">If you used <tspan font-family="'JetBrains Mono', Consolas, monospace" font-weight="700">r1</tspan> on line 7 (after <tspan font-family="'JetBrains Mono', Consolas, monospace" font-weight="700">m.push(30)</tspan>), <tspan font-family="'JetBrains Mono', Consolas, monospace">r1</tspan>'s green bar would</text>
+  <text x="494" y="442" font-size="11.5" fill="#7f1d1d">extend down to line 7 and overlap <tspan font-family="'JetBrains Mono', Consolas, monospace" font-weight="700">m</tspan>'s orange bar on lines 5–6.</text>
+  <text x="494" y="463" font-size="11.5" fill="#991b1b" font-weight="600">Because <tspan font-family="'JetBrains Mono', Consolas, monospace">push()</tspan> can <tspan font-family="'JetBrains Mono', Consolas, monospace">realloc()</tspan> the heap buffer, <tspan font-family="'JetBrains Mono', Consolas, monospace">r1</tspan> would dangle—rejected!</text>
+</svg>

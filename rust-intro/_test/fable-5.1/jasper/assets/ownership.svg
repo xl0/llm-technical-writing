@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 400" width="980" height="400" font-family="'JetBrains Mono','SF Mono',Menlo,Consolas,monospace">
+  <rect width="980" height="400" fill="#fbfaf7"/>
+  <style>
+    .t  { font-family: ui-sans-serif, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; }
+    .code { font-size: 13px; fill: #22252a; }
+    .lbl { font-size: 11px; fill: #6b7280; letter-spacing: .04em; }
+    .panel-title { font-size: 14px; font-weight: 600; fill: #22252a; }
+    .box { fill: #ffffff; stroke: #22252a; stroke-width: 1.4; }
+    .heap { fill: #eef6f1; stroke: #059669; stroke-width: 1.4; }
+    .dead { fill: #f4f4f2; stroke: #b9b9b3; stroke-width: 1.4; stroke-dasharray: 5 4; }
+    .note { font-size: 11.5px; fill: #4b5563; }
+    .arrow { stroke: #2563eb; stroke-width: 1.6; fill: none; }
+    .arrow-red { stroke: #dc2626; stroke-width: 1.6; fill: none; stroke-dasharray: 4 3; }
+    .head { fill: #2563eb; }
+    .head-red { fill: #dc2626; }
+  </style>
+
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2563eb"/>
+    </marker>
+    <marker id="ahr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#dc2626"/>
+    </marker>
+  </defs>
+
+  <!-- ============ PANEL 1: MOVE ============ -->
+  <g>
+    <text class="panel-title t" x="28" y="40">1 · move</text>
+    <text class="code" x="28" y="64">let a = String::from("hi");</text>
+    <text class="code" x="28" y="82">let b = a;  <tspan fill="#dc2626">// a is now gone</tspan></text>
+
+    <text class="lbl t" x="28" y="112">STACK</text>
+    <text class="lbl t" x="220" y="112">HEAP</text>
+
+    <!-- a slot, dead -->
+    <rect class="dead" x="28" y="120" width="112" height="40" rx="4"/>
+    <text class="code" x="38" y="145" fill="#9a9a94">a</text>
+    <line x1="52" y1="137" x2="130" y2="144" stroke="#b9b9b3" stroke-width="1.4"/>
+
+    <!-- b slot -->
+    <rect class="box" x="28" y="172" width="112" height="40" rx="4"/>
+    <text class="code" x="38" y="197">b</text>
+    <text class="lbl t" x="84" y="197">ptr</text>
+
+    <!-- heap buffer -->
+    <rect class="heap" x="220" y="120" width="56" height="40" rx="4"/>
+    <text class="code" x="236" y="145" fill="#065f46">h</text>
+    <text class="code" x="256" y="145" fill="#065f46">i</text>
+    <text class="lbl t" x="220" y="176">len 2 · cap 2</text>
+
+    <line class="arrow" x1="140" y1="192" x2="214" y2="150" marker-end="url(#ah)"/>
+    <text class="note t" x="28" y="238">Physically a 24-byte copy; semantically</text>
+    <text class="note t" x="28" y="255">a move that invalidates the source.</text>
+    <text class="note t" x="28" y="272">No refcount, no GC, no hidden work —</text>
+    <text class="note t" x="28" y="289">and at <tspan font-family="'JetBrains Mono',monospace">-O</tspan> the copy is usually elided.</text>
+  </g>
+
+  <line x1="326" y1="30" x2="326" y2="330" stroke="#e3e1da" stroke-width="1"/>
+
+  <!-- ============ PANEL 2: BORROW ============ -->
+  <g>
+    <text class="panel-title t" x="352" y="40">2 · borrow</text>
+    <text class="code" x="352" y="64">let a = String::from("hi");</text>
+    <text class="code" x="352" y="82">let r: &amp;str = &amp;a;</text>
+
+    <text class="lbl t" x="352" y="112">STACK</text>
+    <text class="lbl t" x="556" y="112">HEAP</text>
+
+    <rect class="box" x="352" y="120" width="112" height="40" rx="4"/>
+    <text class="code" x="362" y="145">a</text>
+    <text class="lbl t" x="408" y="145">ptr</text>
+
+    <rect class="box" x="352" y="172" width="112" height="40" rx="4"/>
+    <line x1="420" y1="172" x2="420" y2="212" stroke="#22252a" stroke-width="1.2"/>
+    <text class="code" x="362" y="197">r</text>
+    <text class="lbl t" x="396" y="197">ptr</text>
+    <text class="lbl t" x="428" y="197">len</text>
+
+    <rect class="heap" x="556" y="120" width="56" height="40" rx="4"/>
+    <text class="code" x="572" y="145" fill="#065f46">h</text>
+    <text class="code" x="592" y="145" fill="#065f46">i</text>
+    <text class="lbl t" x="556" y="176">owned by a</text>
+
+    <line class="arrow" x1="464" y1="140" x2="550" y2="140" marker-end="url(#ah)"/>
+    <line class="arrow" x1="464" y1="192" x2="550" y2="152" marker-end="url(#ah)"/>
+
+    <text class="note t" x="352" y="238">A borrow is a pointer with a proof</text>
+    <text class="note t" x="352" y="255">obligation attached: <tspan font-family="'JetBrains Mono',monospace">a</tspan> must outlive <tspan font-family="'JetBrains Mono',monospace">r</tspan>,</text>
+    <text class="note t" x="352" y="272">and <tspan font-family="'JetBrains Mono',monospace">r</tspan> can't outlive the heap buffer.</text>
+    <text class="note t" x="352" y="289">All of this is checked at compile time.</text>
+  </g>
+
+  <line x1="650" y1="30" x2="650" y2="330" stroke="#e3e1da" stroke-width="1"/>
+
+  <!-- ============ PANEL 3: CLONE ============ -->
+  <g>
+    <text class="panel-title t" x="676" y="40">3 · clone</text>
+    <text class="code" x="676" y="64">let a = String::from("hi");</text>
+    <text class="code" x="676" y="82">let b = a.clone();</text>
+
+    <text class="lbl t" x="676" y="112">STACK</text>
+    <text class="lbl t" x="852" y="112">HEAP</text>
+
+    <rect class="box" x="676" y="120" width="96" height="40" rx="4"/>
+    <text class="code" x="686" y="145">a</text>
+
+    <rect class="box" x="676" y="172" width="96" height="40" rx="4"/>
+    <text class="code" x="686" y="197">b</text>
+
+    <rect class="heap" x="852" y="120" width="56" height="40" rx="4"/>
+    <text class="code" x="868" y="145" fill="#065f46">h</text>
+    <text class="code" x="888" y="145" fill="#065f46">i</text>
+
+    <rect class="heap" x="852" y="172" width="56" height="40" rx="4"/>
+    <text class="code" x="868" y="197" fill="#065f46">h</text>
+    <text class="code" x="888" y="197" fill="#065f46">i</text>
+
+    <line class="arrow" x1="772" y1="140" x2="846" y2="140" marker-end="url(#ah)"/>
+    <line class="arrow" x1="772" y1="192" x2="846" y2="192" marker-end="url(#ah)"/>
+
+    <text class="note t" x="676" y="238">Explicit, visible allocation. In C you</text>
+    <text class="note t" x="676" y="255">would write <tspan font-family="'JetBrains Mono',monospace">strdup</tspan> and hope the</text>
+    <text class="note t" x="676" y="272">caller frees it. Here <tspan font-family="'JetBrains Mono',monospace">Drop</tspan> frees both.</text>
+  </g>
+
+  <line x1="20" y1="322" x2="960" y2="322" stroke="#e3e1da" stroke-width="1"/>
+  <text class="note t" x="28" y="348" fill="#6b7280">The same three shapes — move, alias, deep copy — are the whole vocabulary of ownership.</text>
+  <text class="note t" x="28" y="366" fill="#6b7280">The compiler infers which one each expression uses from the type, then enforces the consequences.</text>
+</svg>

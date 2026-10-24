@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="320" viewBox="0 0 1000 320" role="img" aria-labelledby="title desc">
+  <title id="title">Moving a String transfers ownership, not its heap buffer</title>
+  <desc id="desc">Before a move, binding a owns a String pointing to the bytes hello. After let b equals a, a is no longer usable, b owns the same allocation, and the heap buffer has not been copied.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#28627e"/></marker>
+  </defs>
+  <rect width="1000" height="320" rx="12" fill="#f8fafc"/>
+  <g font-family="system-ui, sans-serif" fill="#172b3a">
+    <text x="36" y="39" font-size="21" font-weight="700">Before</text>
+    <text x="540" y="39" font-size="21" font-weight="700">After: let b = a;</text>
+    <rect x="36" y="65" width="200" height="126" rx="8" fill="#e0f2fe" stroke="#28627e" stroke-width="2"/>
+    <text x="54" y="94" font-size="19" font-weight="700">a: String</text>
+    <text x="54" y="125" font-size="14">pointer · length · capacity</text>
+    <text x="54" y="161" font-size="17">owns allocation</text>
+    <path d="M 236 125 L 290 125" stroke="#28627e" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="300" y="94" width="148" height="62" rx="6" fill="#dcfce7" stroke="#33754d" stroke-width="2"/>
+    <text x="326" y="132" font-family="monospace" font-size="22">hello</text>
+    <text x="320" y="181" font-size="17">heap bytes</text>
+    <path d="M 492 56 L 492 235" stroke="#b8c7d3" stroke-dasharray="5 5"/>
+    <rect x="540" y="65" width="200" height="126" rx="8" fill="#e0f2fe" stroke="#28627e" stroke-width="2"/>
+    <text x="558" y="94" font-size="19" font-weight="700">b: String</text>
+    <text x="558" y="125" font-size="14">pointer · length · capacity</text>
+    <text x="558" y="161" font-size="17">owns allocation</text>
+    <path d="M 740 125 L 794 125" stroke="#28627e" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="804" y="94" width="148" height="62" rx="6" fill="#dcfce7" stroke="#33754d" stroke-width="2"/>
+    <text x="830" y="132" font-family="monospace" font-size="22">hello</text>
+    <text x="804" y="181" font-size="17">same allocation</text>
+    <text x="540" y="230" font-size="18" fill="#9b3030">a is no longer usable.</text>
+    <text x="36" y="284" font-size="18">Conceptual ownership model; a move need not produce an actual machine-level copy.</text>
+  </g>
+</svg>

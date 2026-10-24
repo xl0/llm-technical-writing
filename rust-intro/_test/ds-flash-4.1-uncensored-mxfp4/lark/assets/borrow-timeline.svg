@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="500" viewBox="0 0 960 500" role="img" aria-labelledby="title desc">
+  <title id="title">Borrows last only until their last use</title>
+  <desc id="desc">Shared borrows of a vector end before a mutable push begins, so the shown program compiles. Overlapping the push with a live shared borrow would be rejected because push may reallocate.</desc>
+  <rect width="960" height="500" rx="18" fill="#f8fafc"/>
+  <text x="36" y="42" font-family="Inter, system-ui, sans-serif" font-size="25" font-weight="700" fill="#172033">A borrow lives until its last use — not until end of scope</text>
+  <text x="36" y="68" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#64748b">This is non-lexical lifetimes (NLL): the region is inferred from where the reference is actually used.</text>
+
+  <!-- code panel -->
+  <rect x="36" y="92" width="430" height="286" rx="12" fill="#172033"/>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="16">
+    <text x="62" y="128" fill="#94a3b8">1</text><text x="92" y="128" fill="#f8fafc">let mut v = vec![1, 2, 3];</text>
+    <text x="62" y="164" fill="#94a3b8">2</text><text x="92" y="164" fill="#93c5fd">let first = &amp;v[0];</text>
+    <text x="62" y="200" fill="#94a3b8">3</text><text x="92" y="200" fill="#93c5fd">let last  = &amp;v[2];</text>
+    <text x="62" y="236" fill="#94a3b8">4</text><text x="92" y="236" fill="#f8fafc">println!("{first} {last}");</text>
+    <text x="62" y="272" fill="#94a3b8">5</text><text x="92" y="272" fill="#fbbf24">v.push(4);  // &amp;mut v</text>
+    <text x="62" y="308" fill="#94a3b8">6</text><text x="92" y="308" fill="#f8fafc">println!("{v:?}");</text>
+  </g>
+  <text x="62" y="350" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#86efac">✓ compiles</text>
+  <text x="150" y="350" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#cbd5e1">— the shared borrows are dead by line 5</text>
+
+  <!-- timeline -->
+  <text x="512" y="112" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700" fill="#334155">program time →</text>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" text-anchor="middle" fill="#64748b">
+    <text x="550" y="146">1</text><text x="620" y="146">2</text><text x="690" y="146">3</text><text x="760" y="146">4</text><text x="830" y="146">5</text><text x="892" y="146">6</text>
+  </g>
+  <g stroke="#cbd5e1" stroke-width="1.5">
+    <line x1="550" y1="154" x2="550" y2="336"/><line x1="620" y1="154" x2="620" y2="336"/><line x1="690" y1="154" x2="690" y2="336"/><line x1="760" y1="154" x2="760" y2="336"/><line x1="830" y1="154" x2="830" y2="336"/><line x1="892" y1="154" x2="892" y2="336"/>
+  </g>
+
+  <text x="512" y="190" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" fill="#1d4ed8">&amp;v  first</text>
+  <line x1="620" y1="184" x2="760" y2="184" stroke="#2563eb" stroke-width="7" stroke-linecap="round"/>
+  <text x="512" y="238" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" fill="#1d4ed8">&amp;v  last</text>
+  <line x1="690" y1="232" x2="760" y2="232" stroke="#2563eb" stroke-width="7" stroke-linecap="round"/>
+  <text x="512" y="286" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" fill="#b45309">&amp;mut v  push</text>
+  <line x1="830" y1="280" x2="858" y2="280" stroke="#d97706" stroke-width="7" stroke-linecap="round"/>
+  <text x="512" y="312" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" fill="#475569">owner v</text>
+  <line x1="550" y1="324" x2="892" y2="324" stroke="#475569" stroke-width="3" stroke-linecap="round"/>
+
+  <rect x="512" y="360" width="412" height="18" rx="4" fill="#fee2e2"/>
+  <text x="512" y="398" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#991b1b">Move println! to after push, and first/last would overlap &amp;mut v:</text>
+  <text x="512" y="422" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700" fill="#991b1b">rejected — push may reallocate, dangling first/last.</text>
+  <text x="512" y="448" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#475569">In C this is the classic use-after-realloc /</text>
+  <text x="512" y="470" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#475569">iterator-invalidation bug. In Rust it never runs.</text>
+
+  <rect x="36" y="404" width="430" height="62" rx="10" fill="#ecfdf5" stroke="#99f6e4"/>
+  <text x="56" y="430" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#115e59">Lifetimes are not runtime bookkeeping and not GC pauses:</text>
+  <text x="56" y="454" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#115e59">they are a compile-time proof about each reference's region.</text>
+</svg>

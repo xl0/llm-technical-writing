@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 510" width="980" height="510" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+  <defs>
+    <marker id="arr-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#2563eb"/>
+    </marker>
+    <marker id="arr-purple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#7c3aed"/>
+    </marker>
+    <marker id="arr-teal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#0d9488"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="980" height="510" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+
+  <!-- Header -->
+  <text x="28" y="36" font-size="18" font-weight="700" fill="#0f172a">Polymorphism Without Classes: Static Monomorphization vs. Fat-Pointer Vtables</text>
+  <text x="28" y="57" font-size="13" fill="#475569">Rust structs never store a hidden vtable header. You choose static or dynamic dispatch per call site or pointer type.</text>
+
+  <!-- ================= LEFT PANEL: Static Dispatch ================= -->
+  <rect x="24" y="76" width="445" height="410" rx="8" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="24" y="76" width="445" height="32" rx="8" fill="#e2e8f0"/>
+  <rect x="24" y="96" width="445" height="12" fill="#e2e8f0"/>
+  <text x="40" y="97" font-size="13" font-weight="700" fill="#1e293b">1. STATIC DISPATCH: &lt;T: Write&gt; or impl Write</text>
+
+  <!-- Source generic box -->
+  <rect x="44" y="122" width="405" height="58" rx="6" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="58" y="143" font-size="11" font-weight="700" fill="#1d4ed8">GENERIC RUST SOURCE</text>
+  <text x="58" y="164" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" font-weight="700" fill="#0f172a">fn log&lt;W: Write&gt;(w: &amp;mut W, msg: &amp;[u8])</text>
+
+  <!-- Arrows down from generic to specialized copies -->
+  <path d="M 165 180 L 135 224" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arr-blue)"/>
+  <path d="M 325 180 L 355 224" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arr-blue)"/>
+  <rect x="172" y="192" width="148" height="20" rx="4" fill="#ffffff"/>
+  <text x="246" y="206" font-size="11" font-weight="600" fill="#1d4ed8" text-anchor="middle">rustc monomorphizes</text>
+
+  <!-- Specialized Function 1 -->
+  <rect x="44" y="230" width="194" height="92" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="56" y="250" font-family="'JetBrains Mono', Consolas, monospace" font-size="11.5" font-weight="700" fill="#166534">log_File(w: *mut File)</text>
+  <text x="56" y="270" font-size="11" fill="#334155">• Thin pointer: <tspan font-weight="700">8 bytes</tspan></text>
+  <text x="56" y="288" font-size="11" fill="#334155">• Direct <tspan font-family="'JetBrains Mono', Consolas, monospace">call File::write</tspan></text>
+  <text x="56" y="306" font-size="11" fill="#15803d" font-weight="600">• Inlined &amp; SIMD-eligible</text>
+
+  <!-- Specialized Function 2 -->
+  <rect x="255" y="230" width="194" height="92" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="267" y="250" font-family="'JetBrains Mono', Consolas, monospace" font-size="11.5" font-weight="700" fill="#166534">log_Vec(w: *mut Vec&lt;u8&gt;)</text>
+  <text x="267" y="270" font-size="11" fill="#334155">• Thin pointer: <tspan font-weight="700">8 bytes</tspan></text>
+  <text x="267" y="288" font-size="11" fill="#334155">• Direct <tspan font-family="'JetBrains Mono', Consolas, monospace">call Vec::write</tspan></text>
+  <text x="267" y="306" font-size="11" fill="#15803d" font-weight="600">• Inlined into memcpy</text>
+
+  <!-- Summary Box Left -->
+  <rect x="44" y="340" width="405" height="128" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="58" y="362" font-size="12" font-weight="700" fill="#0f172a">When to use Static Dispatch (Default in Rust):</text>
+  <text x="58" y="383" font-size="11.5" fill="#334155">• Hot loops, iterators, numeric code, and general APIs.</text>
+  <text x="58" y="403" font-size="11.5" fill="#334155">• Zero vtable allocation; zero indirect jump penalty.</text>
+  <text x="58" y="423" font-size="11.5" fill="#334155">• Downside: Each concrete type <tspan font-family="'JetBrains Mono', Consolas, monospace">T</tspan> emits its own machine</text>
+  <text x="58" y="441" font-size="11.5" fill="#334155">  code, and <tspan font-family="'JetBrains Mono', Consolas, monospace">Vec&lt;T&gt;</tspan> can only store one concrete type <tspan font-family="'JetBrains Mono', Consolas, monospace">T</tspan>.</text>
+
+  <!-- ================= RIGHT PANEL: Dynamic Dispatch ================= -->
+  <rect x="491" y="76" width="465" height="410" rx="8" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="491" y="76" width="465" height="32" rx="8" fill="#e2e8f0"/>
+  <rect x="491" y="96" width="465" height="12" fill="#e2e8f0"/>
+  <text x="507" y="97" font-size="13" font-weight="700" fill="#1e293b">2. DYNAMIC DISPATCH: &amp;mut dyn Write / Box&lt;dyn Write&gt;</text>
+
+  <text x="511" y="128" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" font-weight="700" fill="#6b21a8">let w: &amp;mut dyn Write = &amp;mut my_file;</text>
+  <text x="511" y="146" font-size="11.5" fill="#475569">Fat pointer (16B) pairs data address + vtable address on the fly:</text>
+
+  <!-- Fat Pointer on Stack -->
+  <g transform="translate(511, 158)">
+    <rect x="0" y="0" width="150" height="48" fill="#f0fdfa" stroke="#0d9488" stroke-width="2"/>
+    <text x="12" y="18" font-size="11" font-weight="600" fill="#0f766e">data_ptr: *mut () (8B)</text>
+    <text x="12" y="37" font-family="'JetBrains Mono', Consolas, monospace" font-size="12.5" font-weight="700" fill="#115e59">0x7ffc_4100</text>
+
+    <rect x="150" y="0" width="160" height="48" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/>
+    <text x="162" y="18" font-size="11" font-weight="600" fill="#6d28d9">vtable_ptr: *const (8B)</text>
+    <text x="162" y="37" font-family="'JetBrains Mono', Consolas, monospace" font-size="12.5" font-weight="700" fill="#5b21b6">0x4008_e200</text>
+  </g>
+
+  <!-- Concrete Struct Box (No vtable inside!) -->
+  <g transform="translate(511, 260)">
+    <rect x="0" y="0" width="175" height="92" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.5"/>
+    <rect x="0" y="0" width="175" height="26" rx="6" fill="#ccfbf1"/>
+    <text x="87" y="18" font-family="'JetBrains Mono', Consolas, monospace" font-size="11.5" font-weight="700" fill="#115e59" text-anchor="middle">File @ 0x7ffc_4100</text>
+    <text x="14" y="46" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" fill="#0f172a">fd: i32 = 3</text>
+    <text x="14" y="68" font-size="11" font-weight="600" fill="#0f766e">No object header!</text>
+    <text x="14" y="83" font-size="10.5" fill="#475569">sizeof(File) == 4 bytes</text>
+  </g>
+
+  <!-- Static Vtable Box in .rodata -->
+  <g transform="translate(715, 240)">
+    <rect x="0" y="0" width="220" height="136" rx="6" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+    <rect x="0" y="0" width="220" height="26" rx="6" fill="#ede9fe"/>
+    <text x="110" y="18" font-family="'JetBrains Mono', Consolas, monospace" font-size="11" font-weight="700" fill="#5b21b6" text-anchor="middle">VTable (&lt;File as Write&gt;)</text>
+
+    <text x="12" y="44" font-family="'JetBrains Mono', Consolas, monospace" font-size="11" fill="#334155">drop_in_place: fn(*mut File)</text>
+    <line x1="8" y1="51" x2="212" y2="51" stroke="#ddd6fe" stroke-width="1"/>
+    <text x="12" y="67" font-family="'JetBrains Mono', Consolas, monospace" font-size="11" fill="#334155">size: 4, align: 4</text>
+    <line x1="8" y1="74" x2="212" y2="74" stroke="#ddd6fe" stroke-width="1"/>
+    <text x="12" y="92" font-family="'JetBrains Mono', Consolas, monospace" font-size="11" font-weight="700" fill="#5b21b6">write: File::write_fn_ptr</text>
+    <line x1="8" y1="100" x2="212" y2="100" stroke="#ddd6fe" stroke-width="1"/>
+    <text x="12" y="118" font-family="'JetBrains Mono', Consolas, monospace" font-size="11" font-weight="700" fill="#5b21b6">flush: File::flush_fn_ptr</text>
+  </g>
+
+  <!-- Arrows from Fat Pointer to Data & Vtable -->
+  <path d="M 586 206 L 586 254" fill="none" stroke="#0d9488" stroke-width="2" marker-end="url(#arr-teal)"/>
+  <path d="M 741 206 L 785 235" fill="none" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr-purple)"/>
+
+  <!-- Bottom note Right -->
+  <rect x="511" y="390" width="424" height="78" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="525" y="411" font-size="12" font-weight="700" fill="#0f172a">Why external fat pointers beat C++/Python object headers:</text>
+  <text x="525" y="431" font-size="11.5" fill="#334155">• You only pay the 8B vtable pointer cost when using <tspan font-family="'JetBrains Mono', Consolas, monospace">dyn Trait</tspan>.</text>
+  <text x="525" y="451" font-size="11.5" fill="#334155">• Allows implementing new traits on foreign/primitive types (<tspan font-family="'JetBrains Mono', Consolas, monospace">u32</tspan>).</text>
+</svg>

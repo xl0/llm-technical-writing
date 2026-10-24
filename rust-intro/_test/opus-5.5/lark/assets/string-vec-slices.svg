@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="title desc">
+  <title id="title">Rust String, Vec, and slice representations</title>
+  <desc id="desc">String and Vec are three-word owning values pointing to a heap buffer. String slices and slices are two-word fat pointers carrying a pointer and a length.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/></marker>
+  </defs>
+  <rect width="960" height="560" rx="18" fill="#f8fafc"/>
+  <text x="36" y="42" font-family="Inter, system-ui, sans-serif" font-size="25" font-weight="700" fill="#172033">Owners are triples; views are fat pointers</text>
+  <text x="36" y="68" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#64748b">On a 64-bit target each word below is 8 bytes. Nothing here is NUL-terminated or length-free.</text>
+
+  <!-- String owner -->
+  <text x="52" y="108" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" font-weight="700" fill="#172033">String  (owner, growable, UTF-8)</text>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15" text-anchor="middle">
+    <rect x="52" y="122" width="130" height="52" fill="#dbeafe" stroke="#2563eb"/><text x="117" y="154" fill="#1e3a8a">ptr</text>
+    <rect x="182" y="122" width="130" height="52" fill="#eff6ff" stroke="#2563eb"/><text x="247" y="154" fill="#334155">len = 5</text>
+    <rect x="312" y="122" width="130" height="52" fill="#eff6ff" stroke="#2563eb"/><text x="377" y="154" fill="#334155">cap = 8</text>
+  </g>
+  <rect x="610" y="110" width="288" height="76" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="19" text-anchor="middle">
+    <text x="644" y="156" fill="#172033">h</text><text x="684" y="156" fill="#172033">e</text><text x="724" y="156" fill="#172033">l</text><text x="764" y="156" fill="#172033">l</text><text x="804" y="156" fill="#172033">o</text>
+    <text x="852" y="156" fill="#94a3b8">· · ·</text>
+  </g>
+  <path d="M 182 148 C 360 118, 500 128, 604 142" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="610" y="204" font-family="Inter, system-ui, sans-serif" font-size="13" fill="#64748b">heap bytes · spare capacity for push_str</text>
+
+  <!-- &str view -->
+  <text x="52" y="252" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" font-weight="700" fill="#172033">&amp;str  (view, no ownership)</text>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15" text-anchor="middle">
+    <rect x="52" y="266" width="130" height="52" fill="#ccfbf1" stroke="#0f766e"/><text x="117" y="298" fill="#134e4a">ptr</text>
+    <rect x="182" y="266" width="130" height="52" fill="#f0fdfa" stroke="#0f766e"/><text x="247" y="298" fill="#334155">len = 3</text>
+  </g>
+  <path d="M 182 292 C 380 286, 510 176, 650 164" fill="none" stroke="#0f766e" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="620" y="232" width="278" height="48" rx="8" fill="#f0fdfa" stroke="#0f766e"/>
+  <text x="640" y="262" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="16" fill="#134e4a">&amp;s[0..3]  ==  "hel"</text>
+  <text x="52" y="342" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#475569">A &amp;str may point into a String, a string literal in the binary, or any UTF-8 bytes. It cannot outlive them.</text>
+
+  <!-- Vec / slice -->
+  <text x="52" y="390" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" font-weight="700" fill="#172033">Vec&lt;T&gt;  is the same idea for any T</text>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15" text-anchor="middle">
+    <rect x="52" y="404" width="130" height="52" fill="#ffedd5" stroke="#d97706"/><text x="117" y="436" fill="#7c2d12">ptr</text>
+    <rect x="182" y="404" width="130" height="52" fill="#fff7ed" stroke="#d97706"/><text x="247" y="436" fill="#334155">len</text>
+    <rect x="312" y="404" width="130" height="52" fill="#fff7ed" stroke="#d97706"/><text x="377" y="436" fill="#334155">cap</text>
+  </g>
+  <text x="478" y="424" font-family="Inter, system-ui, sans-serif" font-size="16" fill="#334155">and</text>
+  <text x="522" y="398" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" font-weight="700" fill="#172033">&amp;[T]  (slice view)</text>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15" text-anchor="middle">
+    <rect x="522" y="404" width="110" height="52" fill="#ede9fe" stroke="#7c3aed"/><text x="577" y="436" fill="#4c1d95">ptr</text>
+    <rect x="632" y="404" width="110" height="52" fill="#f5f3ff" stroke="#7c3aed"/><text x="687" y="436" fill="#334155">len</text>
+  </g>
+  <text x="766" y="436" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#64748b">≈ C:  T* + size_t, checked</text>
+
+  <rect x="52" y="486" width="846" height="48" rx="9" fill="#172033"/>
+  <text x="72" y="516" font-family="Inter, system-ui, sans-serif" font-size="15" fill="#ffffff">Take a <tspan font-family="ui-monospace, SFMono-Regular, Menlo, monospace">&amp;str</tspan> / <tspan font-family="ui-monospace, SFMono-Regular, Menlo, monospace">&amp;[T]</tspan> parameter when you only need to look; take <tspan font-family="ui-monospace, SFMono-Regular, Menlo, monospace">String</tspan> / <tspan font-family="ui-monospace, SFMono-Regular, Menlo, monospace">Vec&lt;T&gt;</tspan> when you need to own or grow.</text>
+</svg>

@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 320" width="760" height="320" font-family="Helvetica, Arial, sans-serif" font-size="13">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#333"/>
+    </marker>
+    <style>
+      .code { font-family: "DejaVu Sans Mono", Menlo, Consolas, monospace; font-size: 12.5px; fill: #222; }
+      .var { font-family: "DejaVu Sans Mono", Menlo, Consolas, monospace; font-size: 14px; font-weight: bold; fill: #222; text-anchor: end; }
+      .cell { fill: #eef3fb; stroke: #4a6fa5; stroke-width: 1.2; }
+      .dead { fill: #f4f4f4; stroke: #aaa; stroke-width: 1.2; stroke-dasharray: 4 3; }
+      .heap { fill: #fff6e5; stroke: #c98a1b; stroke-width: 1.2; }
+      .ct { font-family: "DejaVu Sans Mono", Menlo, Consolas, monospace; font-size: 12px; fill: #222; text-anchor: middle; }
+      .ctd { font-family: "DejaVu Sans Mono", Menlo, Consolas, monospace; font-size: 12px; fill: #aaa; text-anchor: middle; }
+      .note { font-size: 12.5px; fill: #444; }
+      .side { font-size: 11px; fill: #888; font-style: italic; }
+      .link { stroke: #333; stroke-width: 1.4; fill: none; marker-end: url(#arr); }
+    </style>
+  </defs>
+  <rect width="760" height="320" fill="#ffffff"/>
+
+  <line x1="10" y1="150" x2="750" y2="150" stroke="#ccc" stroke-dasharray="4 4"/>
+  <text x="14" y="145" class="side">stack</text>
+  <text x="14" y="164" class="side">heap</text>
+  <line x1="253" y1="15" x2="253" y2="270" stroke="#e3e3e3"/>
+  <line x1="506" y1="15" x2="506" y2="270" stroke="#e3e3e3"/>
+
+  <!-- Panel 1 -->
+  <text x="20" y="32" class="code">let a = String::from("hi");</text>
+  <text x="62" y="76" class="var">a</text>
+  <rect x="70" y="56" width="50" height="30" class="cell"/><text x="95" y="76" class="ct">ptr</text>
+  <rect x="120" y="56" width="50" height="30" class="cell"/><text x="145" y="76" class="ct">len 2</text>
+  <rect x="170" y="56" width="50" height="30" class="cell"/><text x="195" y="76" class="ct">cap 2</text>
+  <rect x="110" y="178" width="30" height="30" class="heap"/><text x="125" y="198" class="ct">h</text>
+  <rect x="140" y="178" width="30" height="30" class="heap"/><text x="155" y="198" class="ct">i</text>
+  <path d="M95,86 L122,174" class="link"/>
+  <text x="20" y="240" class="note">a owns the heap buffer</text>
+
+  <!-- Panel 2 -->
+  <text x="268" y="32" class="code">let b = a;   // move</text>
+  <text x="315" y="76" class="var" style="fill:#aaa">a</text>
+  <rect x="323" y="56" width="50" height="30" class="dead"/><text x="348" y="76" class="ctd">ptr</text>
+  <rect x="373" y="56" width="50" height="30" class="dead"/><text x="398" y="76" class="ctd">len 2</text>
+  <rect x="423" y="56" width="50" height="30" class="dead"/><text x="448" y="76" class="ctd">cap 2</text>
+  <line x1="318" y1="60" x2="478" y2="84" stroke="#d04040" stroke-width="1.5"/>
+  <text x="315" y="116" class="var">b</text>
+  <rect x="323" y="96" width="50" height="30" class="cell"/><text x="348" y="116" class="ct">ptr</text>
+  <rect x="373" y="96" width="50" height="30" class="cell"/><text x="398" y="116" class="ct">len 2</text>
+  <rect x="423" y="96" width="50" height="30" class="cell"/><text x="448" y="116" class="ct">cap 2</text>
+  <rect x="363" y="178" width="30" height="30" class="heap"/><text x="378" y="198" class="ct">h</text>
+  <rect x="393" y="178" width="30" height="30" class="heap"/><text x="408" y="198" class="ct">i</text>
+  <path d="M348,126 L372,174" class="link"/>
+  <text x="268" y="240" class="note">3 words copied (memcpy), heap untouched.</text>
+  <text x="268" y="258" class="note">a is statically dead: using it won't compile.</text>
+
+  <!-- Panel 3 -->
+  <text x="521" y="32" class="code">let c = b.clone();</text>
+  <text x="568" y="76" class="var">b</text>
+  <rect x="576" y="56" width="50" height="30" class="cell"/><text x="601" y="76" class="ct">ptr</text>
+  <rect x="626" y="56" width="50" height="30" class="cell"/><text x="651" y="76" class="ct">len 2</text>
+  <rect x="676" y="56" width="50" height="30" class="cell"/><text x="701" y="76" class="ct">cap 2</text>
+  <text x="568" y="116" class="var">c</text>
+  <rect x="576" y="96" width="50" height="30" class="cell"/><text x="601" y="116" class="ct">ptr</text>
+  <rect x="626" y="96" width="50" height="30" class="cell"/><text x="651" y="116" class="ct">len 2</text>
+  <rect x="676" y="96" width="50" height="30" class="cell"/><text x="701" y="116" class="ct">cap 2</text>
+  <rect x="545" y="178" width="30" height="30" class="heap"/><text x="560" y="198" class="ct">h</text>
+  <rect x="575" y="178" width="30" height="30" class="heap"/><text x="590" y="198" class="ct">i</text>
+  <rect x="665" y="178" width="30" height="30" class="heap"/><text x="680" y="198" class="ct">h</text>
+  <rect x="695" y="178" width="30" height="30" class="heap"/><text x="710" y="198" class="ct">i</text>
+  <path d="M576,64 C 528,58 528,150 556,174" class="link"/>
+  <path d="M601,126 L676,174" class="link"/>
+  <text x="521" y="240" class="note">Explicit deep copy: new allocation,</text>
+  <text x="521" y="258" class="note">two owners, two buffers.</text>
+
+  <rect x="10" y="280" width="740" height="30" rx="4" fill="#eef7ee" stroke="#5a9a5a"/>
+  <text x="380" y="300" class="note" text-anchor="middle">End of scope → compiler inserts drop(c), drop(b). Each buffer is freed exactly once; a is skipped.</text>
+</svg>
