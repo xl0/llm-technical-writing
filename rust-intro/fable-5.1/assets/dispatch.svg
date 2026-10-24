@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="400" viewBox="0 0 760 400" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="14">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect width="760" height="400" fill="#ffffff"/>
+  <line x1="380" y1="20" x2="380" y2="380" stroke="#cbd5e1" stroke-dasharray="4 4"/>
+
+  <!-- LEFT: static dispatch -->
+  <text x="30" y="30" font-weight="600" fill="#0f172a">Generics: static dispatch</text>
+  <text x="30" y="48" font-size="12" fill="#64748b">Monomorphized at compile time. Direct calls, inlinable.</text>
+
+  <rect x="30" y="64" width="320" height="44" rx="6" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text x="40" y="82" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12" fill="#0f172a">fn total_area&lt;T: Area&gt;(items: &amp;[T]) -&gt; f64</text>
+  <text x="40" y="99" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12" fill="#475569">{ items.iter().map(|s| s.area()).sum() }</text>
+
+  <path d="M110,108 L 110,140" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M270,108 L 270,140" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="190" y="130" text-anchor="middle" font-size="11" fill="#64748b">one copy per T actually used</text>
+
+  <rect x="30" y="144" width="160" height="60" rx="6" fill="#eff6ff" stroke="#3b82f6"/>
+  <text x="40" y="164" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12" fill="#1e3a8a">total_area::&lt;Square&gt;</text>
+  <text x="40" y="182" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="11" fill="#475569">call Square::area</text>
+  <text x="40" y="196" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="11" fill="#475569">→ inlined: x*x</text>
+
+  <rect x="190" y="144" width="160" height="60" rx="6" fill="#eff6ff" stroke="#3b82f6"/>
+  <text x="200" y="164" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12" fill="#1e3a8a">total_area::&lt;Circle&gt;</text>
+  <text x="200" y="182" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="11" fill="#475569">call Circle::area</text>
+  <text x="200" y="196" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="11" fill="#475569">→ inlined: π*r*r</text>
+
+  <g font-size="12" fill="#475569">
+    <text x="30" y="296">+ fastest; type known everywhere</text>
+    <text x="30" y="314">+ errors at the call site, via bounds</text>
+    <text x="30" y="332">– larger binary, slower compile</text>
+    <text x="30" y="350">– a &amp;[T] holds one T; no mixing</text>
+  </g>
+  <text x="30" y="386" font-size="12" fill="#1e40af">Like C++ templates / a per-type macro.</text>
+
+  <!-- RIGHT: dynamic dispatch -->
+  <text x="400" y="30" font-weight="600" fill="#0f172a">dyn Trait: dynamic dispatch</text>
+  <text x="400" y="48" font-size="12" fill="#64748b">A fat pointer: data pointer + vtable pointer. Indirect call.</text>
+
+  <text x="400" y="78" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12" fill="#0f172a">let s: &amp;dyn Area = &amp;Square(2.0);</text>
+
+  <rect x="400" y="90" width="150" height="54" rx="6" fill="#fffbeb" stroke="#f59e0b"/>
+  <text x="410" y="108" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12" fill="#92400e">s  (16 bytes)</text>
+  <text x="410" y="124" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="11" fill="#0f172a">data   ●</text>
+  <text x="410" y="138" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="11" fill="#0f172a">vtable ●</text>
+
+  <!-- data arrow -->
+  <path d="M470,121 C 530,121 540,110 578,110" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="580" y="94" width="150" height="32" rx="6" fill="#eff6ff" stroke="#3b82f6"/>
+  <text x="590" y="114" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12" fill="#1e3a8a">Square { 2.0 }</text>
+
+  <!-- vtable arrow -->
+  <path d="M470,135 C 530,135 540,170 578,170" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="580" y="150" width="170" height="118" rx="6" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text x="590" y="168" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12" fill="#0f172a">vtable&lt;Square as Area&gt;</text>
+  <g font-family="ui-monospace, Menlo, Consolas, monospace" font-size="11" fill="#475569">
+    <text x="590" y="188">drop_in_place</text>
+    <text x="590" y="204">size = 8, align = 8</text>
+    <text x="590" y="222" fill="#1e3a8a">area     → Square::area</text>
+    <text x="590" y="240" fill="#1e3a8a">describe → default impl</text>
+  </g>
+  <text x="590" y="260" font-size="11" fill="#64748b">one static table per (type, trait)</text>
+
+  <g font-size="12" fill="#475569">
+    <text x="400" y="296">+ heterogeneous Vec&lt;Box&lt;dyn Area&gt;&gt;</text>
+    <text x="400" y="314">+ one copy of the code; smaller, faster builds</text>
+    <text x="400" y="332">– indirect call; no inlining across it</text>
+    <text x="400" y="350">– some trait features unavailable (generic</text>
+    <text x="400" y="366">   methods, returning Self by value)</text>
+  </g>
+  <text x="400" y="386" font-size="12" fill="#1e40af">Like C++ virtual, or a struct of function pointers in C.</text>
+</svg>

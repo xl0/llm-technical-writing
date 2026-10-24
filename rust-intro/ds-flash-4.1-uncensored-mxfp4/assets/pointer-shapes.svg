@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 452" width="1000" height="452" font-family="'JetBrains Mono','SF Mono',Menlo,Consolas,monospace">
+  <rect width="1000" height="452" fill="#fbfaf7"/>
+  <style>
+    .t { font-family: ui-sans-serif, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; }
+    .name { font-size: 13.5px; fill: #22252a; }
+    .sub  { font-size: 11px; fill: #8a8a84; }
+    .cell { fill: #ffffff; stroke: #22252a; stroke-width: 1.4; }
+    .cellsm { fill: #f2f5fb; stroke: #2563eb; stroke-width: 1.4; }
+    .cellvt { fill: #fdf3e7; stroke: #d97706; stroke-width: 1.4; }
+    .innertxt { font-size: 11.5px; fill: #22252a; }
+    .byte { font-size: 10.5px; fill: #6b7280; }
+    .note { font-size: 12px; fill: #4b5563; }
+    .note tspan { font-family: 'JetBrains Mono',monospace; font-size: 11.5px; }
+    .hd { font-size: 11px; fill: #9a9a94; letter-spacing: .08em; }
+  </style>
+
+  <!-- header -->
+  <text class="hd t" x="24" y="30">WHAT THE VALUE ACTUALLY IS</text>
+  <text class="hd t" x="330" y="30">x86-64 LAYOUT</text>
+  <text class="hd t" x="606" y="30">C MENTAL MODEL</text>
+
+  <!-- row 1: char* -->
+  <text class="name" x="24" y="60">char *s</text>
+  <text class="sub t" x="24" y="78">C</text>
+  <rect class="cell" x="330" y="48" width="48" height="34" rx="3"/>
+  <text class="innertxt" x="344" y="70">ptr</text>
+  <text class="note t" x="606" y="70">No length. Walks until <tspan>'\0'</tspan>.</text>
+  <text class="byte" x="392" y="70">8 B</text>
+
+  <!-- row 2: &str -->
+  <text class="name" x="24" y="108">&amp;str</text>
+  <text class="sub t" x="24" y="126">Rust</text>
+  <rect class="cellsm" x="330" y="96" width="48" height="34" rx="3"/>
+  <rect class="cellsm" x="378" y="96" width="48" height="34" rx="3"/>
+  <text class="innertxt" x="344" y="118">ptr</text>
+  <text class="innertxt" x="392" y="118">len</text>
+  <text class="note t" x="606" y="118">UTF-8, no NUL, length known → slicing</text>
+  <text class="note t" x="606" y="135">and bounds checks are cheap.</text>
+  <text class="byte" x="440" y="118">16 B</text>
+
+  <!-- row 3: &[T] -->
+  <text class="name" x="24" y="156">&amp;[f64] / &amp;[u8]</text>
+  <text class="sub t" x="24" y="174">Rust</text>
+  <rect class="cellsm" x="330" y="144" width="48" height="34" rx="3"/>
+  <rect class="cellsm" x="378" y="144" width="48" height="34" rx="3"/>
+  <text class="innertxt" x="344" y="166">ptr</text>
+  <text class="innertxt" x="392" y="166">len</text>
+  <text class="note t" x="606" y="166">Identical shape for every <tspan>T</tspan>: a</text>
+  <text class="note t" x="606" y="183">pointer plus a count, checked on index.</text>
+  <text class="byte" x="440" y="166">16 B</text>
+
+  <!-- row 4: &dyn Trait -->
+  <text class="name" x="24" y="204">&amp;dyn Area</text>
+  <text class="sub t" x="24" y="222">Rust</text>
+  <rect class="cellsm" x="330" y="192" width="48" height="34" rx="3"/>
+  <rect class="cellvt" x="378" y="192" width="48" height="34" rx="3"/>
+  <text class="innertxt" x="344" y="214">data</text>
+  <text class="innertxt" x="388" y="214">vtab</text>
+  <text class="note t" x="606" y="214">A fat pointer to vtable: <tspan>drop</tspan>, <tspan>size</tspan>,</text>
+  <text class="note t" x="606" y="231"><tspan>align</tspan>, then one slot per method —</text>
+  <text class="note t" x="606" y="248">the struct-of-fn-pointers you'd write by hand.</text>
+  <text class="byte" x="440" y="214">16 B</text>
+
+  <!-- row 5: Box<T> -->
+  <text class="name" x="24" y="300">Box&lt;T&gt;, &amp;mut T</text>
+  <text class="sub t" x="24" y="318">Rust</text>
+  <rect class="cell" x="330" y="288" width="48" height="34" rx="3"/>
+  <text class="innertxt" x="344" y="310">ptr</text>
+  <text class="note t" x="606" y="310">Exactly <tspan>malloc</tspan> for one <tspan>T</tspan>, freed by <tspan>Drop</tspan>.</text>
+  <text class="byte" x="392" y="310">8 B</text>
+
+  <!-- row 6: Vec<T> -->
+  <text class="name" x="24" y="348">Vec&lt;T&gt;, String</text>
+  <text class="sub t" x="24" y="366">Rust</text>
+  <rect class="cell" x="330" y="336" width="48" height="34" rx="3"/>
+  <rect class="cell" x="378" y="336" width="48" height="34" rx="3"/>
+  <rect class="cell" x="426" y="336" width="48" height="34" rx="3"/>
+  <text class="innertxt" x="344" y="358">ptr</text>
+  <text class="innertxt" x="392" y="358">len</text>
+  <text class="innertxt" x="436" y="358">cap</text>
+  <text class="note t" x="606" y="358">Your <tspan>struct { T *p; size_t len, cap; }</tspan>,</text>
+  <text class="note t" x="606" y="375">except <tspan>realloc</tspan> and <tspan>free</tspan> are automatic.</text>
+  <text class="byte" x="488" y="358">24 B</text>
+
+  <line x1="24" y1="400" x2="976" y2="400" stroke="#e3e1da" stroke-width="1"/>
+  <text class="note t" x="24" y="424">There is no hidden header and no runtime metadata: a Rust reference is a pointer, sometimes two words wide.</text>
+  <text class="note t" x="24" y="442" fill="#8a8a84">That is why <tspan>size_of::&lt;&amp;str&gt;() == 16</tspan> while <tspan>size_of::&lt;&amp;i32&gt;() == 8</tspan>.</text>
+</svg>

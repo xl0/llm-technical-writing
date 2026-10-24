@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="340" viewBox="0 0 760 340" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="14">
+  <rect width="760" height="340" fill="#ffffff"/>
+
+  <text x="30" y="30" font-weight="600" fill="#0f172a">enum Shape { Circle { r: f64 }, Rect { w: f64, h: f64 }, Point }</text>
+  <text x="30" y="50" font-size="12" fill="#64748b">24 bytes: a tag, padded to f64 alignment, followed by a union sized for the largest variant.</text>
+
+  <!-- byte ruler -->
+  <g font-family="ui-monospace, Menlo, Consolas, monospace" font-size="11" fill="#64748b" text-anchor="middle">
+    <text x="130" y="72">0</text><text x="230" y="72">8</text><text x="430" y="72">16</text><text x="630" y="72">24</text>
+  </g>
+
+  <!-- Row: Rect -->
+  <text x="30" y="98" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#0f172a">Rect</text>
+  <rect x="130" y="82" width="100" height="26" fill="#fef3c7" stroke="#f59e0b"/>
+  <text x="180" y="100" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12" fill="#92400e">tag = 1</text>
+  <rect x="230" y="82" width="200" height="26" fill="#dbeafe" stroke="#3b82f6"/>
+  <text x="330" y="100" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12" fill="#1e3a8a">w: f64</text>
+  <rect x="430" y="82" width="200" height="26" fill="#dbeafe" stroke="#3b82f6"/>
+  <text x="530" y="100" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12" fill="#1e3a8a">h: f64</text>
+
+  <!-- Row: Circle -->
+  <text x="30" y="136" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#0f172a">Circle</text>
+  <rect x="130" y="120" width="100" height="26" fill="#fef3c7" stroke="#f59e0b"/>
+  <text x="180" y="138" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12" fill="#92400e">tag = 0</text>
+  <rect x="230" y="120" width="200" height="26" fill="#dbeafe" stroke="#3b82f6"/>
+  <text x="330" y="138" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12" fill="#1e3a8a">r: f64</text>
+  <rect x="430" y="120" width="200" height="26" fill="#f8fafc" stroke="#cbd5e1" stroke-dasharray="3 3"/>
+  <text x="530" y="138" text-anchor="middle" font-size="11" fill="#94a3b8">unused</text>
+
+  <!-- Row: Point -->
+  <text x="30" y="174" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#0f172a">Point</text>
+  <rect x="130" y="158" width="100" height="26" fill="#fef3c7" stroke="#f59e0b"/>
+  <text x="180" y="176" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12" fill="#92400e">tag = 2</text>
+  <rect x="230" y="158" width="400" height="26" fill="#f8fafc" stroke="#cbd5e1" stroke-dasharray="3 3"/>
+  <text x="430" y="176" text-anchor="middle" font-size="11" fill="#94a3b8">unused</text>
+
+  <text x="642" y="130" font-size="12" fill="#475569">`match` reads</text>
+  <text x="642" y="146" font-size="12" fill="#475569">the tag, then</text>
+  <text x="642" y="162" font-size="12" fill="#475569">only the fields</text>
+  <text x="642" y="178" font-size="12" fill="#475569">that variant has.</text>
+
+  <!-- Divider -->
+  <line x1="30" y1="204" x2="730" y2="204" stroke="#e2e8f0"/>
+
+  <!-- Niche optimization -->
+  <text x="30" y="232" font-weight="600" fill="#0f172a">Option&lt;Box&lt;T&gt;&gt; needs no tag at all</text>
+  <text x="30" y="252" font-size="12" fill="#64748b">A Box is never null, so the compiler uses the null bit pattern as the None “niche”. 8 bytes, same as a C pointer.</text>
+
+  <text x="30" y="290" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#0f172a">Some(box)</text>
+  <rect x="130" y="274" width="200" height="26" fill="#dcfce7" stroke="#22c55e"/>
+  <text x="230" y="292" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12" fill="#166534">0x7f3a…c010  (non-null ptr)</text>
+
+  <text x="30" y="326" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13" fill="#0f172a">None</text>
+  <rect x="130" y="310" width="200" height="26" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text x="230" y="328" text-anchor="middle" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12" fill="#475569">0x0000000000000000</text>
+
+  <text x="350" y="292" font-size="12" fill="#475569">Same trick applies to Option&lt;&amp;T&gt;, Option&lt;NonZeroU32&gt;,</text>
+  <text x="350" y="308" font-size="12" fill="#475569">Option&lt;bool&gt;, Option&lt;char&gt;, enums with spare tag values…</text>
+  <text x="350" y="328" font-size="12" fill="#475569">Zero cost over C; the null check just can't be forgotten.</text>
+</svg>
