@@ -21,3 +21,8 @@ python/uv) and download images from the internet. In this case, use assets/ and 
 All models used `high` reasoning. Anthropic models ran in CC, Gemini in AI Studio,
 and the rest in Pi (with a web search extension). All ran with `AGENTS.md` and
 `CLAUDE.md` ignored.
+
+## Evaluation
+
+[Comparison and grading report](REPORT.md): Fable 5.1 graded the outputs under
+anonymous codenames, then substituted model names after the key was revealed to it.
