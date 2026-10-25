@@ -52,9 +52,9 @@ candidate, and supplies a sticky section outline, diagram dialog, responsive
 layout, and system dark mode. The article is centered independently of the outline;
 model names are always visible. A white/slate sans-serif theme opens directly on
 the content without an introductory banner. Switching entries retains in-page
-reading positions; nothing is stored across reloads. Long code blocks expand into
-the unused right margin, capped to the viewport; narrow screens retain horizontal
-code scrolling without widening the prose or overlapping the outline.
+reading positions; nothing is stored across reloads. Wide code blocks and tables
+expand into the unused right margin, capped to the viewport; narrow screens retain
+horizontal scrolling without widening the prose or overlapping the outline.
 
 `rust-intro/build-reader.py` contains the template and builder. It uses installed
 Markdown 3.5.2 and Pygments 2.17.2, reads the `astra-6` judge's identical frozen

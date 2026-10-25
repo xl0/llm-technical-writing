@@ -202,7 +202,7 @@ pre code { font:inherit; background:none; padding:0; border:0; overflow-wrap:nor
 .codehilite { margin:24px 0 30px; border-radius:9px; }
 .codehilite pre { margin:0; }
 /* Use the empty right margin; the left margin belongs to the section outline. */
-.codehilite, article > pre { width:max-content; min-width:100%; max-width:calc(100% + max(0px, (100vw - 780px) / 2 - 40px)); }
+.codehilite, article > pre, .table-scroll { width:max-content; min-width:100%; max-width:calc(100% + max(0px, (100vw - 780px) / 2 - 40px)); }
 @@HIGHLIGHT@@
 .codehilite { background:#182231; }
 .codehilite .c, .codehilite .c1, .codehilite .cm, .codehilite .cs { color:#a3b0c2; }
@@ -260,7 +260,7 @@ dialog::backdrop { background:#111827b8; }
  .layout { display:block; max-width:none; padding:0; }
  article { font-size:11pt; }
  pre { white-space:pre-wrap; }
- .codehilite, article > pre { width:100%; max-width:100%; }
+ .codehilite, article > pre, .table-scroll { width:100%; max-width:100%; }
  article h2 { break-after:avoid; }
  .figure, pre { break-inside:avoid; }
  .table-scroll { overflow:visible; }
