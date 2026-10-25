@@ -29,8 +29,8 @@ a, button, select, summary { -webkit-tap-highlight-color:transparent; }
 select { background:var(--card); border:1px solid var(--line); border-radius:7px; padding:10px 28px 10px 12px; max-width:300px; cursor:pointer; }
 .progress { height:2px; background:var(--accent); transform:scaleX(0); transform-origin:left; }
 /* Equal side tracks center the article, independently of the left outline. */
-.layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,780px) minmax(0,1fr); gap:32px; padding:32px 32px 70px; align-items:start; }
-aside { position:sticky; top:106px; width:min(220px,100%); justify-self:end; max-height:calc(100vh - 130px); overflow:auto; scrollbar-width:thin; padding:6px 10px 16px 0; }
+.layout { --wide-width:calc(100vw - 2 * (40px + 180px + 32px)); display:grid; grid-template-columns:minmax(0,1fr) minmax(0,780px) minmax(0,1fr); gap:32px; padding:32px 32px 70px; align-items:start; }
+aside { position:sticky; top:106px; width:min(180px,100%); justify-self:start; max-height:calc(100vh - 130px); overflow:auto; scrollbar-width:thin; padding:6px 10px 16px 0; }
 .side-title { text-transform:uppercase; font-size:10px; font-weight:700; color:var(--muted); letter-spacing:1.6px; margin-bottom:17px; }
 .outline ul { list-style:none; padding:0; margin:0; }
 .outline li { margin:0; }
@@ -58,8 +58,8 @@ pre { font:14px/1.75 var(--mono); tab-size:4; white-space:pre; overflow:auto; pa
 pre code { font:inherit; background:none; padding:0; border:0; overflow-wrap:normal; }
 .codehilite { margin:24px 0 30px; border-radius:9px; }
 .codehilite pre { margin:0; }
-/* Use the empty right margin; the left margin belongs to the section outline. */
-.codehilite, article > pre, .table-scroll { width:max-content; min-width:100%; max-width:calc(100% + max(0px, (100vw - 780px) / 2 - 40px)); }
+/* Symmetric breakout, reserving outline width plus gutters on desktop. */
+.codehilite, article > pre, .table-scroll { position:relative; left:50%; transform:translateX(-50%); width:max-content; min-width:100%; max-width:max(100%, var(--wide-width)); }
 pre { line-height: 125%; }
 td.linenos .normal { color: #aaaaaa; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 span.linenos { color: #aaaaaa; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -173,7 +173,7 @@ dialog::backdrop { background:#111827b8; }
  :root { color-scheme:dark; --paper:#111827; --ink:#e5eaf2; --muted:#a6b2c4; --line:#334155; --accent:#9bbcff; --wash:#202e44; --card:#182231; }
 }
 @media (max-width:1150px) {
- .layout { display:block; max-width:844px; margin:auto; padding:32px 32px 50px; }
+ .layout { --wide-width:calc(100vw - 80px); display:block; max-width:844px; margin:auto; padding:32px 32px 50px; }
  aside { position:static; width:100%; max-height:none; padding:0 0 24px; }
  aside .side-title { display:none; }
  .outline { max-height:170px; overflow:auto; border:1px solid var(--line); border-radius:7px; padding:10px; }
@@ -201,7 +201,7 @@ dialog::backdrop { background:#111827b8; }
  .layout { display:block; max-width:none; padding:0; }
  article { font-size:11pt; }
  pre { white-space:pre-wrap; }
- .codehilite, article > pre, .table-scroll { width:100%; max-width:100%; }
+ .codehilite, article > pre, .table-scroll { left:auto; transform:none; width:100%; max-width:100%; }
  article h2 { break-after:avoid; }
  .figure, pre { break-inside:avoid; }
  .table-scroll { overflow:visible; }

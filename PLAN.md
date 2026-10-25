@@ -18,8 +18,8 @@ and original evaluations so the matrix remains auditable.
 
 - [x] Build a self-contained browser reader for the frozen submissions, with
   visible model names, a centered article, a section outline, readable code/tables,
-  and enlarged diagrams. Let wide code and tables use the right margin without
-  widening prose.
+  and enlarged diagrams. Keep the TOC near the left edge; let wide code and tables
+  expand equally into both margins without widening prose or covering the TOC.
   Preserve the source text; open directly on the content
   in a clean white/slate sans-serif theme.
 - [x] Check desktop/mobile rendering, light/dark themes, navigation, and diagrams;
