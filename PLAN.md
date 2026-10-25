@@ -12,4 +12,16 @@ and original evaluations so the matrix remains auditable.
   scratch-directory deviations in `rust-intro/EVALUATION-RUNS.md`.
 - [x] Publish `rust-intro/MATRIX.md`: raw scores, author averages with/without
   self-scores, within-judge ranks, and limitations. Keep the historical report
-  separate. No remaining work is scheduled.
+  separate.
+
+## Human reading
+
+- [x] Build a self-contained browser reader for the frozen submissions, with
+  visible model names, a centered article, a section outline, readable code/tables,
+  and enlarged diagrams. Let long code use the right margin without widening prose.
+  Preserve the source text; open directly on the content
+  in a clean white/slate sans-serif theme.
+- [x] Check desktop/mobile rendering, light/dark themes, navigation, and diagrams;
+  document opening/rebuilding. `rust-intro/index.html` works directly from disk.
+- [x] Configure GitHub Pages branch hosting from `master`, with a root redirect
+  to the Rust reader and no Jekyll processing or custom build workflow.

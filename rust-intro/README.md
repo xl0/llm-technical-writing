@@ -1,5 +1,30 @@
 # Introduction to Rust
 
+## Browser reader
+
+[Read online](https://xl0.github.io/llm-technical-writing/rust-intro/), or open
+[index.html](index.html) directly in a browser—no web server needed. All eight
+frozen introductions and their diagrams are embedded. The reader opens directly
+on the content, with visible model names and a centered text column. Its clean
+white/slate theme uses sans-serif typography, section navigation, syntax highlighting,
+expandable diagrams, and system light/dark colors. It remembers reading positions
+while switching entries within the open page.
+
+To rebuild after changing the reader:
+
+```sh
+python rust-intro/build-reader.py
+```
+
+Run from the repository root (the script also works from other directories).
+Building uses Python plus Markdown 3.5.2 and Pygments 2.17.2, already installed
+in the development environment. Reading the generated HTML needs no dependencies.
+The builder checks the frozen snapshot hashes and does not edit submissions.
+
+GitHub Pages serves the repository root from `master`; `.nojekyll` disables
+Jekyll processing, and the root `index.html` redirects here. To update the site,
+rebuild the reader, commit the generated HTML, and push to `master`.
+
 ## Prompt
 
 ```text

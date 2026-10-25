@@ -1,7 +1,7 @@
 # Project state
 
-This repository compares LLM technical writing. There is no application or build
-system. `rust-intro/README.md` records the writing prompt and evaluation workflow.
+This repository compares LLM technical writing. `rust-intro/README.md` records
+the writing prompt, browser-reader instructions, and evaluation workflow.
 Original submissions live under model-named directories, with optional SVG assets.
 
 `rust-intro/REPORT.md` is the earlier seven-entry evaluation by Fable. Its Argon
@@ -42,3 +42,33 @@ self-scores, and average-tie within-judge ranks. Aggregation preserves the judge
 scores and reports without correcting their technical judgments. Sol leads on
 other-judge mean score; Fable leads on other-judge mean rank. Five judges rank
 their own submission first, a descriptive observation rather than proof of bias.
+
+## Browser reader
+
+`rust-intro/index.html` is a generated, self-contained offline reader for all eight
+frozen submissions. Open it directly in a browser; no server or frontend framework.
+It embeds highlighted Markdown and SVG image data, namespaces heading anchors by
+candidate, and supplies a sticky section outline, diagram dialog, responsive
+layout, and system dark mode. The article is centered independently of the outline;
+model names are always visible. A white/slate sans-serif theme opens directly on
+the content without an introductory banner. Switching entries retains in-page
+reading positions; nothing is stored across reloads. Long code blocks expand into
+the unused right margin, capped to the viewport; narrow screens retain horizontal
+code scrolling without widening the prose or overlapping the outline.
+
+`rust-intro/build-reader.py` contains the template and builder. It uses installed
+Markdown 3.5.2 and Pygments 2.17.2, reads the `astra-6` judge's identical frozen
+candidate copies, and verifies all 27 input hashes against the key before building.
+HTML is allowlisted, asset paths confined to candidate assets, and SVGs embedded
+as images rather than executable inline markup. A restrictive CSP prevents network
+loads. Source submissions and evaluations are never edited by the renderer.
+
+Verified in headless Chrome: centering at seven widths from 320px to 1920px,
+candidate switching, section/back navigation, scroll restoration, diagram
+dialog/Escape, and image loading. No external requests or JavaScript errors
+were observed.
+
+GitHub Pages is configured to serve the root of `master` at
+`https://xl0.github.io/llm-technical-writing/`. The root `index.html` redirects to
+`rust-intro/`; `.nojekyll` disables Jekyll processing. There is no custom CI build:
+rebuild locally and commit the generated reader before pushing site updates.
